@@ -10,36 +10,27 @@ import (
 
 const tasksFile = "tasks.json"
 
-// tasks slice holds our to-do items persistently stored in tasksFile
 var tasks []string
 
-// loadTasks loads tasks from tasksFile if it exists
 func loadTasks() error {
-	file, err := os.Open(tasksFile)
+	// Use os.ReadFile if you want to read entire file at once:
+	data, err := os.ReadFile(tasksFile)
 	if err != nil {
-		// If the file does not exist, initialize tasks as empty
 		if os.IsNotExist(err) {
 			tasks = []string{}
 			return nil
 		}
 		return err
 	}
-	defer file.Close()
-
-	data, err := ioutil.ReadAll(file)
-	if err != nil {
-		return err
-	}
 	return json.Unmarshal(data, &tasks)
 }
 
-// saveTasks saves the tasks slice to tasksFile in JSON format
 func saveTasks() error {
 	data, err := json.MarshalIndent(tasks, "", "  ")
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(tasksFile, data, 0644)
+	return os.WriteFile(tasksFile, data, 0644)
 }
 
 func main() {
