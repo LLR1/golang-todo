@@ -34,24 +34,20 @@ func saveTasks() error {
 }
 
 func main() {
-	// Load tasks from file
 	if err := loadTasks(); err != nil {
-		fmt.Println("Error loading tasks:", err)
-		return
+		fmt.Fprintln(os.Stderr, "Error loading tasks:", err)
+		os.Exit(1)
 	}
 
-	// Check if any command is provided
 	if len(os.Args) < 2 {
 		printUsage()
 		return
 	}
 
-	// Get the command from command-line arguments
 	command := os.Args[1]
 
 	switch command {
 	case "add":
-		// Check if task description is provided
 		if len(os.Args) < 3 {
 			fmt.Println("Please specify a task to add.")
 			return
